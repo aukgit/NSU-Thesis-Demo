@@ -9,11 +9,36 @@ using SampleEnterprise.Controllers;
 using SampleEnterprise.Models.Context;
 //using SampleEnterprise.Models.EntityModel.POCO; // Northwind Sample
 using DevTrends.MvcDonutCaching;
+using SampleEnterprise.Models.POCO.IdentityCustomization;
+using SampleEnterprise.Modules.Cache;
+using SampleEnterprise.Modules.InternetProtocolRelations;
 
 namespace SampleEnterprise.Controllers {
     [OutputCache(CacheProfile = "YearNoParam")]
     //public class PartialsController : GenericController<Inherit it with your db context> {
     public class PartialsController : GenericController<DevIdentityDbContext> {
+        public string GetCountryId(string id) {
+            //var countries = CachedQueriedData.GetCountries();
+            //var countryId = IpConfigRelations.GetCountryId(id);
+            Country country = null;
+
+            var value = IpConfigRelations.IpToValue(id);
+            using (var db2 = new ApplicationDbContext()) {
+                //SELECT * FROM [ip-to-country] WHERE (([BeginingIP] <= ?) AND ([EndingIP] >= ?))
+                var countryIp = db2.CountryDetectByIPs.FirstOrDefault(n => n.BeginingIP <= value && n.EndingIP >= value);
+                if (countryIp != null) {
+                    country = CachedQueriedData.GetCountries().FirstOrDefault(n =>
+                       n.CountryID == countryIp.CountryID
+                   );
+                    if (country != null) {
+                        return country.DisplayCountryName + " : val : " + value + ", ip :" + id;
+                    }
+                }
+            }
+            return "-1 : " + id + " : " + value;
+
+            //return HtmlHelpers.DropDownCountry(countries);
+        }
 
 
         #region Constructors
