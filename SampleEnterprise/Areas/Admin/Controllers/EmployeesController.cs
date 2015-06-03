@@ -166,7 +166,14 @@ namespace SampleEnterprise.Areas.Admin.Controllers {
         [OutputCache(CacheProfile = "Year")]
         public ActionResult Index(int id) {
             var employees = db.Employees.Include(e => e.EmployeeCategory);
-            
+            var pageInfo = new PaginationInfo {
+                ItemsInPage = AppConfig.Setting.PageItems,
+                PageNumber = page,
+                PagesExists = -1
+            };
+            var pagedData =
+                employees.GetPageData(pageInfo, "EmployeePageCount", true)
+                    .ToList();
             bool viewOf = ViewTapping(ViewStates.Index);
             return View(employees.ToList());
         }
