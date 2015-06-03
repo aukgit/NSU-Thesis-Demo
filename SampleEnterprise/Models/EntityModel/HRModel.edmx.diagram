@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0d4b0a45db3943c88e1bb848a2d94ee0" Name="Diagram1">
+        <EntityTypeShape EntityType="HRModel.Attendence" Width="1.5" PointX="5.25" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRModel.Department" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRModel.DepartmentEmployeeRelation" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRModel.Employee" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRModel.EmployeeCategory" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <AssociationConnector Association="HRModel.FK_Attendence_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="HRModel.FK_DepartmentEmployeeRelation_Department" ManuallyRouted="false" />
+        <AssociationConnector Association="HRModel.FK_DepartmentEmployeeRelation_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="HRModel.FK_Employee_EmployeeCategory" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

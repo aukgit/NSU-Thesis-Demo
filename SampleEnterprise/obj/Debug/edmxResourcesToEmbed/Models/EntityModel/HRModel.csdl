@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HRModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Attendence">
+    <Key>
+      <PropertyRef Name="AttendenceID" />
+    </Key>
+    <Property Name="AttendenceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="Dated" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="State" Type="Boolean" Nullable="false" />
+    <Property Name="MinutesSpend" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <NavigationProperty Name="Employee" Relationship="Self.FK_Attendence_Employee" FromRole="Attendence" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="DepartmentID" />
+    </Key>
+    <Property Name="DepartmentID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DepartmentName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="DepartmentEmployeeRelations" Relationship="Self.FK_DepartmentEmployeeRelation_Department" FromRole="Department" ToRole="DepartmentEmployeeRelation" />
+  </EntityType>
+  <EntityType Name="DepartmentEmployeeRelation">
+    <Key>
+      <PropertyRef Name="DepartmentEmployeeRelationID" />
+    </Key>
+    <Property Name="DepartmentEmployeeRelationID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DepartmentID" Type="Int16" Nullable="false" />
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Department" Relationship="Self.FK_DepartmentEmployeeRelation_Department" FromRole="DepartmentEmployeeRelation" ToRole="Department" />
+    <NavigationProperty Name="Employee" Relationship="Self.FK_DepartmentEmployeeRelation_Employee" FromRole="DepartmentEmployeeRelation" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmpoyeeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="EmployeeCategoryID" Type="Int16" Nullable="false" />
+    <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="Attendences" Relationship="Self.FK_Attendence_Employee" FromRole="Employee" ToRole="Attendence" />
+    <NavigationProperty Name="DepartmentEmployeeRelations" Relationship="Self.FK_DepartmentEmployeeRelation_Employee" FromRole="Employee" ToRole="DepartmentEmployeeRelation" />
+    <NavigationProperty Name="EmployeeCategory" Relationship="Self.FK_Employee_EmployeeCategory" FromRole="Employee" ToRole="EmployeeCategory" />
+  </EntityType>
+  <EntityType Name="EmployeeCategory">
+    <Key>
+      <PropertyRef Name="EmployeeCategoryID" />
+    </Key>
+    <Property Name="EmployeeCategoryID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Salary" Type="Decimal" Precision="16" Scale="2" Nullable="false" />
+    <NavigationProperty Name="Employees" Relationship="Self.FK_Employee_EmployeeCategory" FromRole="EmployeeCategory" ToRole="Employee" />
+  </EntityType>
+  <Association Name="FK_Attendence_Employee">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+    <End Role="Attendence" Type="Self.Attendence" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="Attendence">
+        <PropertyRef Name="EmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DepartmentEmployeeRelation_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="1" />
+    <End Role="DepartmentEmployeeRelation" Type="Self.DepartmentEmployeeRelation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="DepartmentID" />
+      </Principal>
+      <Dependent Role="DepartmentEmployeeRelation">
+        <PropertyRef Name="DepartmentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DepartmentEmployeeRelation_Employee">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+    <End Role="DepartmentEmployeeRelation" Type="Self.DepartmentEmployeeRelation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="DepartmentEmployeeRelation">
+        <PropertyRef Name="EmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employee_EmployeeCategory">
+    <End Role="EmployeeCategory" Type="Self.EmployeeCategory" Multiplicity="1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EmployeeCategory">
+        <PropertyRef Name="EmployeeCategoryID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="EmployeeCategoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="HREntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Attendences" EntityType="Self.Attendence" />
+    <EntitySet Name="Departments" EntityType="Self.Department" />
+    <EntitySet Name="DepartmentEmployeeRelations" EntityType="Self.DepartmentEmployeeRelation" />
+    <EntitySet Name="Employees" EntityType="Self.Employee" />
+    <EntitySet Name="EmployeeCategories" EntityType="Self.EmployeeCategory" />
+    <AssociationSet Name="FK_Attendence_Employee" Association="Self.FK_Attendence_Employee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Attendence" EntitySet="Attendences" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DepartmentEmployeeRelation_Department" Association="Self.FK_DepartmentEmployeeRelation_Department">
+      <End Role="Department" EntitySet="Departments" />
+      <End Role="DepartmentEmployeeRelation" EntitySet="DepartmentEmployeeRelations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DepartmentEmployeeRelation_Employee" Association="Self.FK_DepartmentEmployeeRelation_Employee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="DepartmentEmployeeRelation" EntitySet="DepartmentEmployeeRelations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employee_EmployeeCategory" Association="Self.FK_Employee_EmployeeCategory">
+      <End Role="EmployeeCategory" EntitySet="EmployeeCategories" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
